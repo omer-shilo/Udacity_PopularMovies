@@ -6,20 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.shilo.omer.popularmovies.FragmentMain">
 
-    <ScrollView
+    <ListView
+        android:id="@+id/listview_movies"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-        <GridView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:numColumns="2"
-            android:id="@+id/grid_view"
-            android:stretchMode="columnWidth"
-            android:horizontalSpacing="0dp"
-            android:verticalSpacing="0dp"
-            />
-    </ScrollView>
+        android:layout_height="match_parent"/>
 </android.support.v4.widget.SwipeRefreshLayout>
