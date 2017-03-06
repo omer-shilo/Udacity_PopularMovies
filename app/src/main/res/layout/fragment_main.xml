@@ -6,8 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.shilo.omer.popularmovies.FragmentMain">
 
-    <ListView
-        android:id="@+id/listview_movies"
+    <GridView
+        android:id="@+id/gridview_movies"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:numColumns="2" />
 </android.support.v4.widget.SwipeRefreshLayout>

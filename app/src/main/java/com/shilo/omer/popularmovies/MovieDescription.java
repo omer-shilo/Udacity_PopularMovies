@@ -6,6 +6,14 @@ package com.shilo.omer.popularmovies;
 
 public class MovieDescription {
 
+    public String Description;
+    public String Title;
+    public String PosterPath;
+    public String Id;
+    public String UserRating;
+    public String ReleaseDate;
+
+
     public String getDescription() {
         return Description;
     }
@@ -27,14 +35,37 @@ public class MovieDescription {
         PosterPath = posterPath;
     }
 
-    public String Description;
-    public String Title;
-    public String PosterPath;
+    public String getId() {
+        return Id;
+    }
+    public void setId(String id) {
+        Id = id;
+    }
 
+    public String getReleaseDate() {
+        return ReleaseDate;
+    }
+    public void setReleaseDate(String releaseDate) {
+        ReleaseDate = releaseDate;
+    }
 
-    public MovieDescription(String description, String title, String posterPath) {
+    public String getUserRating() {
+        return UserRating;
+    }
+    public void setUserRating(String userRating) {
+        UserRating = userRating;
+    }
+
+    public MovieDescription(String posterPath) {
+        PosterPath = posterPath;
+    }
+
+    public MovieDescription(String description, String title, String posterPath, String id, String releaseDate, String userRating) {
         Description = description;
         Title = title;
         PosterPath = posterPath;
+        Id = id;
+        ReleaseDate = releaseDate;
+        UserRating = userRating;
     }
 }

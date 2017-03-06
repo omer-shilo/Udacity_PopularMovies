@@ -1,6 +1,25 @@
 <resources>
     <string name="app_name">Popular Movies</string>
 
-    <string name="the_moviedb_api_link" translatable="false">https://api.themoviedb.org/3/movie/now_playing?</string>
+    <string name="the_moviedb_api_link" translatable="false">https://api.themoviedb.org/3/movie/</string>
+    <string name="the_moviedb_api_path_popular" translatable="false">popular</string>
+    <string name="the_moviedb_api_path_top_rated" translatable="false">top_rated</string>
     <string name="the_moviedb_image_link" translatable="false">https://image.tmdb.org/t/p/</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="pref_sort_title" translatable="true">Movies Sort Type</string>
+    <string name="pref_sort_dialog_title" translatable="true">Sort Types</string>
+    <string name="pref_sort_key" translatable="false">sortMovie</string>
+    <string-array name="pref_sort_options">
+        <item>Popular</item>
+        <item>Top Rated</item>
+    </string-array>
+    <string-array name="pref_sort_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string name="pref_sort_default_value" translatable="false">0</string>
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
+
 </resources>

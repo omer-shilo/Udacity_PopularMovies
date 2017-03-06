@@ -1,9 +1,11 @@
 package com.shilo.omer.popularmovies;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,8 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
 
@@ -29,6 +31,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -36,10 +39,12 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
     private final String LOG_TAG = com.shilo.omer.popularmovies.FragmentMain.class.getSimpleName();
     SwipeRefreshLayout mSwipeRefreshLayout;
     MoviesAdapter mMoviesAdapter;
-    ListView mDataListView;
+    GridView mDataGridView;
+    List<MovieDescription> mMovieDescriptionList;
 
     public FragmentMain() {
         // Required empty public constructor
+        mMovieDescriptionList = new ArrayList<>();
     }
 
     @Override
@@ -64,9 +69,9 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_main);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        
-        mDataListView = (ListView) rootView.findViewById(R.id.listview_movies);
-        mDataListView.setAdapter(mMoviesAdapter);
+
+        mDataGridView = (GridView) rootView.findViewById(R.id.gridview_movies);
+        mDataGridView.setAdapter(mMoviesAdapter);
         //// TODO: 05/03/2017 Set OnItemClickListener for the movie list
 
                 
@@ -92,6 +97,7 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
         private class ViewHolder{
             ImageView poster;
         }
+
         public MoviesAdapter(Context context, ArrayList<MovieDescription> movies){
             super(context, 0, movies);
         }
@@ -112,16 +118,10 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            //TextView title = (TextView) convertView.findViewById(R.id.textview_movie_title);
-            //TextView description = (TextView) convertView.findViewById(R.id.textview_movie_description);
-
-            //title.setText(movie.getTitle());
-            //description.setText(movie.getDescription());
-
             Uri builder = Uri.parse(getString(R.string.the_moviedb_image_link)).buildUpon()
                     .appendPath("w185").appendEncodedPath(movie.getPosterPath()).build();
 
-            Log.d(LOG_TAG,builder.toString());
+            //Log.d(LOG_TAG,builder.toString());
             Glide.with(getActivity()).load(builder.toString()).centerCrop().crossFade().into(viewHolder.poster);
 
             return convertView;
@@ -147,6 +147,7 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
 
             try{
                 Uri buildUrl = Uri.parse(getString(R.string.the_moviedb_api_link)).buildUpon()
+                        .appendPath(getSortMoviesOption())
                         .appendQueryParameter("api_key",BuildConfig.THE_MOVIEDB_API_KEY).build();
 
 
@@ -211,7 +212,28 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
         protected void onPostExecute(MovieDescription[] s) {
             mSwipeRefreshLayout.setRefreshing(false);
             mMoviesAdapter.clear();
-            mMoviesAdapter.addAll(s);
+            UpdateMoviesDescriptionList(s);
+            mMoviesAdapter.addAll(mMovieDescriptionList);
+        }
+    }
+
+    private String getSortMoviesOption(){
+        SharedPreferences prefs =  PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String value = prefs.getString(getString(R.string.pref_sort_key),getString(R.string.pref_sort_default_value));
+        String result = getString(R.string.the_moviedb_api_path_popular);
+
+        if (!value.equals(prefs.getString(getString(R.string.pref_sort_default_value),getString(R.string.pref_sort_default_value)))){
+            result = getString(R.string.the_moviedb_api_path_top_rated);
+        }
+
+        return result;
+    }
+
+    private void UpdateMoviesDescriptionList(MovieDescription[] inputArray){
+        mMovieDescriptionList.clear();
+
+        for (MovieDescription desc: inputArray) {
+            mMovieDescriptionList.add(desc);
         }
     }
 
@@ -225,10 +247,9 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
         for (int i = 0; i < amountOfMovies; i++) {
             JSONObject currentMovie = moviesArray.getJSONObject(i);
 
-            result[i] = new MovieDescription(currentMovie.getString("overview"),currentMovie.getString("title"),currentMovie.getString("poster_path"));
+            result[i] = new MovieDescription(currentMovie.getString("poster_path"));
         }
 
         return result;
     }
-
 }
