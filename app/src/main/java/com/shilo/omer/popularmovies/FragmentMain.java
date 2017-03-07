@@ -1,6 +1,7 @@
 package com.shilo.omer.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -72,7 +74,16 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
 
         mDataGridView = (GridView) rootView.findViewById(R.id.gridview_movies);
         mDataGridView.setAdapter(mMoviesAdapter);
-        //// TODO: 05/03/2017 Set OnItemClickListener for the movie list
+
+        mDataGridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MovieDescription selectedMovie = mMoviesAdapter.getItem(position);
+                Intent openDetailMovieActivity = new Intent(getActivity(),MovieDetailActivity.class);
+                openDetailMovieActivity.putExtra("MOVIE_DESC_OBJECT",selectedMovie);
+                startActivity(openDetailMovieActivity);
+            }
+        });
 
                 
         return rootView;
@@ -248,6 +259,10 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
             JSONObject currentMovie = moviesArray.getJSONObject(i);
 
             result[i] = new MovieDescription(currentMovie.getString("poster_path"));
+            result[i].setDescription(currentMovie.getString("overview"));
+            result[i].setTitle(currentMovie.getString("title"));
+            result[i].setReleaseDate(currentMovie.getString("release_date"));
+            result[i].setUserRating(currentMovie.getString("vote_average"));
         }
 
         return result;

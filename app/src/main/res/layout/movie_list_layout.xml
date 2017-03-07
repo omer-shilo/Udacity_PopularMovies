@@ -12,4 +12,3 @@
         android:layout_gravity="center"
         android:id="@+id/imageview_movie_poster" />
 </LinearLayout>
-
