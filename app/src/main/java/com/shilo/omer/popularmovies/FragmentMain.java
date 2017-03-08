@@ -3,6 +3,8 @@ package com.shilo.omer.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,7 +54,7 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onStart() {
         super.onStart();
-        new FetchNowPlayingMoviesTask().execute("");
+        FetchMovieList();
     }
 
     @Override
@@ -101,7 +103,8 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        new FetchNowPlayingMoviesTask().execute("");
+        FetchMovieList();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     public class MoviesAdapter extends ArrayAdapter<MovieDescription>{
@@ -246,6 +249,19 @@ public class FragmentMain extends Fragment implements SwipeRefreshLayout.OnRefre
         for (MovieDescription desc: inputArray) {
             mMovieDescriptionList.add(desc);
         }
+    }
+
+    private void FetchMovieList(){
+        if(isOnline()){
+            new FetchNowPlayingMoviesTask().execute("");
+        }
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private MovieDescription[] getMovieListFromJson(String movieListJsonStr) throws JSONException{

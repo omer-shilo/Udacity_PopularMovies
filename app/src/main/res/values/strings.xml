@@ -20,6 +20,8 @@
         <item>1</item>
     </string-array>
     <string name="pref_sort_default_value" translatable="false">0</string>
-    <string name="title_activity_movie_detail">MovieDetailActivity</string>
+    <string name="title_activity_movie_detail">Movie Details</string>
+    <string name="release_date_title">Release Date:</string>
+    <string name="user_rating_title">User Rating:</string>
 
 </resources>
